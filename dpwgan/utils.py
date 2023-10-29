@@ -4,7 +4,8 @@ import numpy as np
 import math
 import torchvision
 
-from dpwgan import DPWGAN, MultiCategoryGumbelSoftmax
+from layers import MultiCategoryGumbelSoftmax
+from dpwgan import DPWGAN
 
 
 
