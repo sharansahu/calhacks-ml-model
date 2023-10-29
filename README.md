@@ -1,11 +1,28 @@
-# calhacks-ml-model
-
 # DPWGAN
+[![Build Status](https://travis-ci.org/civisanalytics/dpwgan.svg?branch=master)](https://travis-ci.org/civisanalytics/dpwgan)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE.txt)
+
 Code for a differentially private Wasserstein GAN implemented in [PyTorch](https://pytorch.org/)
+
+## Maintenance
+
+This project is released as-is, and is not actively maintained by Civis Analytics.
 
 ## Installation
 
 This package requires Python >= 3.5
+
+```
+pip install -r requirements.txt
+python setup.py install
+```
+
+For development, also install development requirements:
+
+```
+pip install -r dev-requirements.txt
+```
 
 ## Usage
 
@@ -41,18 +58,16 @@ def noise_function(n):
     return torch.randn(n, noise_dim)
 ```
 
-The [`examples`](dpwgan/examples) folder has four scripts to demonstrate setting
+The [`examples`](examples) folder has two scripts to demonstrate setting
 up, training, and generating data with a DPWGAN with categorical data sets.
 
-[`simple_example.py`](dpwgan/examples/simple_example.py) shows how to create
+[`simple_example.py`](examples/simple_example.py) shows how to create
 a generator, discriminator, and noise function, and applies the DPWGAN
 to a toy categorical data set.
 
-[`image_example.py`](dpwgan/examples/simple_example.py) applies a DPWGAN to
-CT scan data. Download the data set at (https://www.kaggle.com/datasets/kmader/siim-medical-images/data).
-
-[`mnist_example.py`](dpwgan/examples/mnist_example.py) applies a DPWGAN to
-MNIST data.
+[`census_example.py`](examples/census_example.py) applies a DPWGAN to
+ACS PUMS data. Use [`create_census_data.py`](examples/create_census_data.py)
+to download the input data set.
 
 If you want to print the training losses,
 set the logging level to `logging.INFO`:
@@ -84,6 +99,12 @@ and depends on the architecture of the discriminator. See section 3.4 of
 for details, where `c_p` corresponds to `weight_clip`.
 `sigma` should be set to the product of `sigma_n` and `c_g`.
 
-## Acknowledgements
+## Contributing
 
-Starter code is largely based off and modified using https://github.com/civisanalytics/dpwgan
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for information about contributing to this project.
+
+## License
+
+BSD 3-Clause
+
+See [`LICENSE.txt`](LICENSE.txt) for details.
