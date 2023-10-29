@@ -41,17 +41,17 @@ def noise_function(n):
     return torch.randn(n, noise_dim)
 ```
 
-The [`examples`](dpwgan/examples) folder has four scripts to demonstrate setting
+The [`examples`](examples) folder has four scripts to demonstrate setting
 up, training, and generating data with a DPWGAN with categorical data sets.
 
-[`simple_example.py`](dpwgan/examples/simple_example.py) shows how to create
+[`simple_example.py`](examples/simple_example.py) shows how to create
 a generator, discriminator, and noise function, and applies the DPWGAN
 to a toy categorical data set.
 
-[`image_example.py`](dpwgan/examples/simple_example.py) applies a DPWGAN to
+[`image_example.py`](examples/simple_example.py) applies a DPWGAN to
 CT scan data. Download the data set at (https://www.kaggle.com/datasets/kmader/siim-medical-images/data).
 
-[`mnist_example.py`](dpwgan/examples/mnist_example.py) applies a DPWGAN to
+[`mnist_example.py`](examples/mnist_example.py) applies a DPWGAN to
 MNIST data.
 
 If you want to print the training losses,
