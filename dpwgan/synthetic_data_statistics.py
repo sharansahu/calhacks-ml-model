@@ -69,8 +69,45 @@ def inception_score(imgs, cuda=True, batch_size=32, resize=False, splits=1):
 
     return np.mean(split_scores), np.std(split_scores)
 
-def calculate_fid(act1, act2):
-    """Calculate FID score given two sets of precomputed activations"""
+def calculate_fid(images1, images2, batch_size=50, dims=2048, device='cuda', resize=False):
+    """Calculate the FID score between two sets of images.
+    
+    Args:
+        images1 (List of PIL Images): First set of images.
+        images2 (List of PIL Images): Second set of images.
+        batch_size (int): Batch size for processing.
+        dims (int): Dimensionality of features extracted from Inception model.
+        device (str): Device to run the computation ('cuda' or 'cpu').
+        resize (bool): Resize images to (299, 299) for Inception model.
+
+    Returns:
+        float: FID score.
+    """
+    # Load inception model
+    inception_model = inception_v3(pretrained=True, transform_input=False)
+    inception_model.fc = torch.nn.Identity()
+    inception_model = inception_model.to(device)
+    inception_model.eval()
+
+    def get_activations(images, model, batch_size, dims, device, resize):
+        """Calculates the activations of the Inception model for a set of images"""
+        num_images = len(images)
+        pred_arr = np.empty((num_images, dims))
+        for i in range(0, num_images, batch_size):
+            batch_imgs = images[i:i + batch_size]
+            if resize:
+                batch_imgs = [img.resize((299, 299)) for img in batch_imgs]
+            batch = torch.stack([TF.to_tensor(s) for s in batch_imgs]).to(device)
+            with torch.no_grad():
+                pred = model(batch)
+            pred_arr[i:i + batch_size] = pred.cpu().numpy().reshape(batch.size(0), -1)
+        return pred_arr
+
+    # Get activations for both sets of images
+    act1 = get_activations(images1, inception_model, batch_size, dims, device, resize)
+    act2 = get_activations(images2, inception_model, batch_size, dims, device, resize)
+
+    # Compute FID
     mu1, sigma1 = act1.mean(axis=0), np.cov(act1, rowvar=False)
     mu2, sigma2 = act2.mean(axis=0), np.cov(act2, rowvar=False)
     ssdiff = np.sum((mu1 - mu2) ** 2.0)
@@ -79,18 +116,6 @@ def calculate_fid(act1, act2):
         covmean = covmean.real
     fid = ssdiff + np.trace(sigma1 + sigma2 - 2.0 * covmean)
     return fid
-
-def get_activations(images, model, batch_size=50, dims=2048, device='cuda'):
-    """Calculates the activations of the Inception model for a set of images"""
-    model.eval()
-    num_images = len(images)
-    pred_arr = np.empty((num_images, dims))
-    for i in range(0, num_images, batch_size):
-        batch = torch.stack([TF.to_tensor(s) for s in images[i:i + batch_size]]).to(device)
-        with torch.no_grad():
-            pred = model(batch)[0]
-        pred_arr[i:i + batch_size] = pred.cpu().data.numpy().reshape(batch.size(0), -1)
-    return pred_arr
 
 
 def psnr(original, compressed):

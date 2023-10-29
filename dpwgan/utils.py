@@ -7,8 +7,6 @@ import torchvision
 from layers import MultiCategoryGumbelSoftmax
 from dpwgan import DPWGAN
 
-
-
 def create_categorical_gan(noise_dim, hidden_dim, output_dims):
     generator = torch.nn.Sequential(
         torch.nn.Linear(noise_dim, hidden_dim),

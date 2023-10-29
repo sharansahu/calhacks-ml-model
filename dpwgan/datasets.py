@@ -10,8 +10,6 @@ from torch.utils.data import Dataset
 import math
 import cv2
 
-
-
 def to_onehot(data, codes):
     indices = [np.where(codes == val)[0][0] for val in data]
     indices = torch.LongTensor(list([val] for val in indices))
