@@ -86,5 +86,5 @@ for details, where `c_p` corresponds to `weight_clip`.
 
 ## Acknowledgements
 
-Starter code is largely based off and modified using https://github.com/civisanalytics/dpwgan
+The starter code is largely based on and modified using https://github.com/civisanalytics/dpwgan
 
